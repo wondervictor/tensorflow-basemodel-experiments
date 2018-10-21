@@ -117,7 +117,7 @@ def inference():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--data_dir', type=str, help='training data path', default='../data/cifar-10-batches-py')
+    parser.add_argument('-d', '--data_dir', type=str, help='training data path', default='../data')
     parser.add_argument('-log', '--log_dir', type=str, help='training log dir', default='log')
     parser.add_argument('-l', '--lr', type=float, default=0.1, help='base learning rate')
     parser.add_argument('-b', '--batch_size', type=int, default=128, help='training batch size')

@@ -11,6 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms import transforms
 from augment import augment
 
+
 def cifar10_train_dataset(data_dir):
     """ CIFAR-10 dataset
 
@@ -59,7 +60,7 @@ class CIFAR10Dataset(Dataset):
         img = np.reshape(img, (3, 32, 32))
         img = img.transpose([1, 2, 0])
         img = augment(img)
-        img = img.transpose([2,0,1])
+        img = img.transpose([2, 0, 1])
         # TODO: Augmentation
         img = img / 255.0
         img = (img-self._mean)/self._std

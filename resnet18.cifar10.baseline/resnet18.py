@@ -36,22 +36,24 @@ def create_residual_block(prefix, x, out_ch, training, stride=1, proj=False):
 
 def resnet18(x, num_classes, training):
 
-    x = conv2d(x, 64, 7, padding=PADDING, strides=2, data_format=DATA_FORMAT, name='conv1')
+    x = conv2d(x, 64, 3, padding=PADDING, strides=1, data_format=DATA_FORMAT, name='conv1')
     x = batch_norm(x, decay=0.9, scale=True, is_training=training, epsilon=BN_EPS, data_format='NCHW')
     x = tf.nn.relu(x)
 
     stage = [2, 2, 2, 2]
     channels = [64, 128, 256, 512]
+    enable_stride = [False, True, True, True]
 
     for i, s, c in zip(list(range(4)), stage, channels):
         for l in range(s):
-            stride = 1 if l > 0 else 2
-            proj = False if l > 0 else True
+            stride = 2 if l == 0 and enable_stride[i] else 1
+            proj = False if stride == 1 else True
             x = create_residual_block('res_block_{}_{}'.format(i+1, l+1),
                                       x, c, stride=stride, proj=proj,
                                       training=training)
 
-    # BxCx1x1
+    # BxCx4x4
+    x = slim.layers.avg_pool2d(x, 4, data_format='NCHW')
     x = flatten(x)
     x = slim.fully_connected(x, num_classes, activation_fn=None)
 
